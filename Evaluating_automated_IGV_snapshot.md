@@ -195,9 +195,47 @@ Result on NeSI (as too large to upload on github): /nesi/nobackup/brins03581/Cen
 
 File for these 2 samples and small VCF is already quite large (~70 MB), but can still run interactively on Jupyter. Run on larger VCF and more samples would possibly need to be run in slurm script.
 
+## **3. Samplot**
 
+Install using bioconda in an env.
+Activate by:
 
+```
+module load Miniconda3
+source activate /nesi/project/brins03581/env/samplot
+```
 
+Several notes for samplot:
+- samplot doesn't support INS
+- samplot can only be used for visualising variants with SVTYPE equal to DEL, DUP, INV, BND and TRA.
+- cannot plot sniffles/cuteSV BND. It needs the second chromosome to be available in the INFO/CHR2x field
+- can use a multi-sample SV.vcf, and only plot certain samples, providing the multiple bam files, space delimited with -b, and provide the related sample_IDs in the same order. e.g:
+-b /path/sampleA.sorted.bam /path/sampleB.sorted.bam \
+--sample_ids sampleA sampleB
+
+**Example1 (DEL, certain region only):**
+
+```
+samplot vcf \
+--vcf /home/cenliau/00_nesi_projects/brins03581_nobackup/Cen/samplot/sniffles/vcf/C00106_C01238_C00532_C01208.vcf \
+-d /home/cenliau/00_nesi_projects/brins03581_nobackup/Cen/samplot \
+--filter "SVTYPE == 'DEL'" \
+-O png \
+--important_regions /home/cenliau/00_nesi_projects/brins03581_nobackup/Cen/samplot/regions_SV_all_samples.bed \
+-b /nesi/nobackup/brins03581/Genotyping_2025/PB026_clone_2024A/filteredModBam/C00106.1.1.1_sup_5mC_5hmC_6mA_SQK.nosecondary.sorted.bam /nesi/nobackup/brins03581/Genotyping_2025/PB026_clone_2024A/filteredModBam/C00532.1.1.1_sup_5mC_5hmC_6mA_SQK.nosecondary.sorted.bam /nesi/nobackup/brins03581/Genotyping_2025/PB026_clone_2024A/filteredModBam/C01208.1.1.1_sup_5mC_5hmC_6mA_SQK.nosecondary.sorted.bam /nesi/nobackup/brins03581/Genotyping_2025/PB026_clone_2024A/filteredModBam/C01238.1.1.1_sup_5mC_5hmC_6mA_SQK.nosecondary.sorted.bam \
+--sample_ids C00106 C00532 C01208 C01238 \
+--debug
+
+#regions_SV_all_samples.bed:
+chr01_hap1	1	28255867
+```
+
+List of plotted SV would be listed on index.html file, and for each SV, a png file was created.
+
+One of the plot:
+<img width="2400" height="1200" alt="DEL_chr01_hap1_9362501_9365070" src="https://github.com/user-attachments/assets/4abc42a4-db71-4c5d-8b5d-8027a3094f43" />
+
+Other examples are here: /nesi/project/brins03581/Cen/samplot
 
 
 
